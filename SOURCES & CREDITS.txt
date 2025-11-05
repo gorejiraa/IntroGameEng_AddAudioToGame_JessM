@@ -1,0 +1,5 @@
+https://gooseninja.itch.io/space-music-pack / Title Screen Song / 'Meet the Princess' & 'Scream' is used for the player hit sound.
+
+https://heltonyan.itch.io/retroanimesfx / Used for all other SFX audio 
+
+PicoSYNTH, Audacity, and Reaper were used for any custom SFX or music that was made
