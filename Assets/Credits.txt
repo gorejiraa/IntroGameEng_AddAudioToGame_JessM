@@ -1,0 +1,16 @@
+﻿Credits
+
+Space Background by Westbeam
+https://opengameart.org/content/space-background-1
+
+Tutorials
+https://www.youtube.com/watch?v=r8N6J79W0go
+
+Extending Space Shooter
+https://www.youtube.com/watch?v=n67w7aEZKhg&feature=emb_logo
+
+Player ship & asteroid assets from Unity Learn: Space Shooter
+https://learn.unity.com/tutorial/introduction-to-space-shooter
+
+Font: Galaxy Monkey
+https://www.1001fonts.com/galaxy-monkey-font.html

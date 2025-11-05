@@ -1,0 +1,13 @@
+TODO: Look into correcting a bug where...
+	- Player Damage
+	- Asteroid Explosion
+	- Player Explosion
+
+All play at teh same time and override each other, often only hearing one.
+
+Come up with a priority for each sound and see where it may/may not be appropriate for more than one SFX to play at the same time 
+
+Side thought.. it could be that all these sounds are sharing the same sound channel and new sounds played are overriding the older sounds and cancelleing them, 
+might be ablke to fix it by having each SFX type have its own audio Source.
+
+	
