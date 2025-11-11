@@ -1,68 +1,157 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SFXManager : MonoBehaviour
 {
+    [Header("Sources")]
+    public AudioSource SFXaudioSource;         // one-shot SFX source
+    public AudioSource BgMusicAudioSource;     // separate source for background music (child "BgMusic")
+
+    [Header("SFX Clips")]
     public AudioClip playerShoot;
     public AudioClip asteroidExplosion;
     public AudioClip playerDamage;
     public AudioClip playerExplosion;
-    public AudioClip BgMusicGameplay;
+    public AudioClip milestoneExplosion; // optional special milestone SFX
+
+    [Header("BG Music Clips")]
     public AudioClip BgMusicTitleScreen;
+    public AudioClip BgMusicGameplay;
 
-    private AudioSource SFXaudioSource;
+    [Header("Advanced Settings")]
+    [Tooltip("Random pitch variation for frequently played SFX (± percentage, e.g. 0.05 = ±5%)")]
+    public float pitchVariationPercent = 0.05f; // ±5% default
+    [Tooltip("How much to increase music speed (pitch) per wave, e.g. 0.02 = +2% per wave")]
+    public float tempoIncreasePerWave = 0.02f;
+    public float maxMusicPitch = 1.5f; // clamp top
 
-    private AudioSource BgMusicAudioSource;
+    [Tooltip("Play milestone every N asteroids destroyed")]
+    public int milestoneEvery = 10;
 
-    public void Awake()
+    // internal state
+    private int asteroidKillCount = 0;
+    private Coroutine musicFadeCoroutine;
+
+    void Awake()
     {
-        SFXaudioSource = GetComponent<AudioSource>();
-        //GameObject child = this.transform.Find("BgMusic").gameObject;
-        BgMusicAudioSource = gameObject.transform.Find("BgMusic").gameObject.GetComponent<AudioSource>();
+        // If not assigned in inspector, try to find them
+        if (SFXaudioSource == null) SFXaudioSource = GetComponent<AudioSource>();
+        if (BgMusicAudioSource == null)
+        {
+            Transform bg = transform.Find("BgMusic");
+            if (bg != null) BgMusicAudioSource = bg.GetComponent<AudioSource>();
+        }
 
-
-        
-        //BgMusicAudioSource.GetComponent<AudioSource>().Play();       
+        // safety checks
+        if (SFXaudioSource == null) Debug.LogWarning("SFXManager: SFXaudioSource not assigned/found.");
+        if (BgMusicAudioSource == null) Debug.LogWarning("SFXManager: BgMusicAudioSource not assigned/found.");
     }
 
+    // general purpose play with optional pitch variation
+    public void PlayOneShot(AudioClip clip, float volume = 1f, bool applyPitchVariation = false)
+    {
+        if (clip == null || SFXaudioSource == null) return;
 
+        float priorPitch = SFXaudioSource.pitch;
+        if (applyPitchVariation)
+        {
+            float variation = Random.Range(-pitchVariationPercent, pitchVariationPercent);
+            SFXaudioSource.pitch = 1f + variation;
+        }
+        SFXaudioSource.PlayOneShot(clip, volume);
+        if (applyPitchVariation) SFXaudioSource.pitch = priorPitch;
+    }
 
-    //called in the PlayerController Script
+    // called in PlayerController script
     public void PlayerShoot()
     {
-        SFXaudioSource.PlayOneShot(playerShoot);
+        // apply pitch variation to minimize ear fatigue
+        PlayOneShot(playerShoot, 1f, true);
     }
 
-    //called in the PlayerController Script
+    // called in PlayerController script
     public void PlayerDamage()
     {
-        SFXaudioSource.PlayOneShot(playerDamage);
+        PlayOneShot(playerDamage);
     }
 
-    //called in the PlayerController Script
+    // called in PlayerController script (player death)
     public void PlayerExplosion()
     {
-        SFXaudioSource.PlayOneShot(playerExplosion);
+        PlayOneShot(playerExplosion);
     }
 
-    //called in the AsteroidDestroy script
+    // called in the AsteroidDestroy script
     public void AsteroidExplosion()
     {
-        SFXaudioSource.PlayOneShot(asteroidExplosion);
+        asteroidKillCount++;
+        // play normal explosion
+        PlayOneShot(asteroidExplosion);
+
+        // milestone check
+        if (milestoneExplosion != null && milestoneEvery > 0 && (asteroidKillCount % milestoneEvery == 0))
+        {
+            PlayOneShot(milestoneExplosion);
+        }
     }
 
-    
-    public void BGMusicMainMenu()
+    // reset kill counter (optional call when level restarts)
+    public void ResetAsteroidCount()
     {
-        BgMusicAudioSource.clip = BgMusicTitleScreen;
-        BgMusicAudioSource.Play();
+        asteroidKillCount = 0;
     }
 
-    public void BGMusicGameplay()
+    // Background music controls
+    public void BGMusicMainMenu(float fadeTime = 0.5f)
     {
-        BgMusicAudioSource.GetComponent<AudioSource>().clip = BgMusicGameplay;
+        StartBgMusicClip(BgMusicTitleScreen, fadeTime);
+    }
+
+    public void BGMusicGameplay(float fadeTime = 0.5f)
+    {
+        StartBgMusicClip(BgMusicGameplay, fadeTime);
+    }
+
+    private void StartBgMusicClip(AudioClip clip, float fadeTime)
+    {
+        if (BgMusicAudioSource == null || clip == null) return;
+
+        if (musicFadeCoroutine != null) StopCoroutine(musicFadeCoroutine);
+        musicFadeCoroutine = StartCoroutine(CrossfadeMusic(clip, fadeTime));
+    }
+
+    private IEnumerator CrossfadeMusic(AudioClip newClip, float fadeTime)
+    {
+        // fade out
+        float startVolume = BgMusicAudioSource.volume;
+        for (float t = 0f; t < fadeTime; t += Time.deltaTime)
+        {
+            BgMusicAudioSource.volume = Mathf.Lerp(startVolume, 0f, t / fadeTime);
+            yield return null;
+        }
+        BgMusicAudioSource.volume = 0f;
+        BgMusicAudioSource.clip = newClip;
+        BgMusicAudioSource.loop = true;
         BgMusicAudioSource.Play();
 
+        // fade in
+        for (float t = 0f; t < fadeTime; t += Time.deltaTime)
+        {
+            BgMusicAudioSource.volume = Mathf.Lerp(0f, startVolume, t / fadeTime);
+            yield return null;
+        }
+        BgMusicAudioSource.volume = startVolume;
+
+        musicFadeCoroutine = null;
+    }
+
+    // Adjust music tempo (pitch) based on current wave index
+    // Call this from your WaveManager when a new wave spawns.
+    public void SetMusicPitchForWave(int waveIndex)
+    {
+        if (BgMusicAudioSource == null) return;
+        float targetPitch = 1f + (waveIndex * tempoIncreasePerWave);
+        targetPitch = Mathf.Clamp(targetPitch, 0.5f, maxMusicPitch);
+        BgMusicAudioSource.pitch = targetPitch;
     }
 }
