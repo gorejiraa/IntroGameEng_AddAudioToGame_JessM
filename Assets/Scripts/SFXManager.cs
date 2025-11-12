@@ -20,10 +20,10 @@ public class SFXManager : MonoBehaviour
 
     [Header("Advanced Settings")]
     [Tooltip("Random pitch variation for frequently played SFX (± percentage, e.g. 0.05 = ±5%)")]
-    public float pitchVariationPercent = 0.05f; // ±5% default
+    public float pitchVariationPercent = 5; // ±5% default
     [Tooltip("How much to increase music speed (pitch) per wave, e.g. 0.02 = +2% per wave")]
     public float tempoIncreasePerWave = 0.02f;
-    public float maxMusicPitch = 1.5f; // clamp top
+    public float maxMusicPitch = 1.5f; 
 
     [Tooltip("Play milestone every N asteroids destroyed")]
     public int milestoneEvery = 10;
@@ -145,8 +145,6 @@ public class SFXManager : MonoBehaviour
         musicFadeCoroutine = null;
     }
 
-    // Adjust music tempo (pitch) based on current wave index
-    // Call this from your WaveManager when a new wave spawns.
     public void SetMusicPitchForWave(int waveIndex)
     {
         if (BgMusicAudioSource == null) return;

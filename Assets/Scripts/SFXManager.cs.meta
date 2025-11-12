@@ -3,7 +3,16 @@ guid: d4290a2498fc81b4894976a73ba08e84
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - SFXaudioSource: {instanceID: 0}
+  - BgMusicAudioSource: {instanceID: 0}
+  - playerShoot: {fileID: 8300000, guid: 2efc032095d434f4090882aa6b31aec5, type: 3}
+  - asteroidExplosion: {instanceID: 0}
+  - playerDamage: {instanceID: 0}
+  - playerExplosion: {instanceID: 0}
+  - milestoneExplosion: {instanceID: 0}
+  - BgMusicTitleScreen: {instanceID: 0}
+  - BgMusicGameplay: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

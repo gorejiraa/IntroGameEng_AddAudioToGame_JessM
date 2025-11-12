@@ -1853,7 +1853,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.291
+  m_Volume: 0.443
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3225,17 +3225,17 @@ AudioSource:
   m_GameObject: {fileID: 1337980914}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 2138bf7705c74d9449df1144c3a1a69a, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.277
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 122
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -3334,7 +3334,7 @@ MonoBehaviour:
   milestoneExplosion: {fileID: 8300000, guid: 56c7eab081a758047900750f282ca368, type: 3}
   BgMusicTitleScreen: {fileID: 8300000, guid: a4ffb53a92dc7cb4a932c16cfbc24e84, type: 3}
   BgMusicGameplay: {fileID: 8300000, guid: a85e856fa91cc3042b45bcd70647ffe7, type: 3}
-  pitchVariationPercent: 0.5
+  pitchVariationPercent: 5
   tempoIncreasePerWave: 0.3
   maxMusicPitch: 3
   milestoneEvery: 15
@@ -3477,7 +3477,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.327
+  m_Volume: 0.412
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -4098,11 +4098,11 @@ AudioSource:
   m_GameObject: {fileID: 1855683727}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 5736314106102417420, guid: 61ce1be989c0a954295c05516b7ad61f, type: 2}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 61ce1be989c0a954295c05516b7ad61f, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.686
+  m_Volume: 0.603
   m_Pitch: 1
   Loop: 1
   Mute: 0
